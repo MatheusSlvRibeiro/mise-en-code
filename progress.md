@@ -14,4 +14,4 @@ After the Phase 2 PR is merged, start Phase 3 (Enforcement). After the CI job ha
 
 ## Open issues
 
-- `NOTES.md` (the user's conventions) is not in the repo yet. The Phase 2 skills use only the conventions stated in the task; revisit them when `NOTES.md` arrives. Needed for Phase 4.
+- `notes.md` (the user's conventions) stays untracked on purpose. The Phase 2 skills are reconciled with it.
