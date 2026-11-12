@@ -2,18 +2,20 @@
 
 ## Current state
 
-Phases 1 and 2 are verified. Phase 3 (Enforcement) is implemented and in review: `block-main-push.sh`, `lint-on-edit.sh`, `settings.example.json`, and a CI job `check` that runs `scripts/check.sh`. No stack skills or agents exist yet.
+Phases 1–3 are verified. P7 (project board) is implemented and in review: the `wf-project-board` skill with `move-card.sh`, and a workflow that closes issues when a PR merges into `preview`. The GitHub Project `mise-en-code` (private, linked to this repo) has the Status columns Backlog, Ready, In progress, In Review, Done, and a `Sprint` iteration field with no iterations yet. Both rulesets require the `check` job. No stack skills or agents exist yet.
 
 ## Last session
 
-Wrote the Phase 3 files on branch `feat/enforcement-hooks-ci` and opened its PR into `preview`.
+Created the Project, the skill, and the close-on-merge workflow on branch `feat/project-board-skill`.
 
 ## Next step
 
-Once the `check` job has run on the Phase 3 PR, propose a `required_status_checks` rule for `check` on `protect-preview` and `protect-main`. Then start Phase 4 (Stack skills): show each skill's name, description, and outline before writing it.
+Start Phase 4 (Stack skills) on a branch from `preview`. Show each skill's name, description, and outline before writing it.
 
 ## Open issues
 
+- The close-on-merge workflow only runs once it is on `preview`, so it is untested until the next PR merges into `preview`.
+- In the Project settings (Workflows), enable "Item closed → Done". The API cannot set this.
+- Not decided: the sprint cadence (iteration length and start day).
 - `notes.md` (the user's conventions) stays untracked on purpose.
 - `lint-on-edit.sh` supports Python (`ruff`) and TypeScript/JavaScript (project-local `eslint`) only.
-- Not yet decided: what the agent should do with the GitHub Project (Kanban) board mentioned in `notes.md`.

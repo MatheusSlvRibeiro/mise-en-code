@@ -29,6 +29,11 @@
       "id": "P6",
       "title": "Agents: Explore, test-runner, reviewer, plus model-choice ADR",
       "status": "pending"
+    },
+    {
+      "id": "P7",
+      "title": "Project board: wf-project-board skill, close-on-merge workflow",
+      "status": "implemented"
     }
   ]
 }
