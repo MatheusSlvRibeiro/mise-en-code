@@ -2,16 +2,16 @@
 
 ## Current state
 
-Phase 1 (Foundation) is implemented and in review. No skills, hooks, or agents exist yet.
+Phases 1 and 2 are done: foundation files and the three workflow skills (`wf-git-flow`, `wf-verify-done`, `wf-session-handoff`). Phase 2 is in review. No hooks or agents exist yet.
 
 ## Last session
 
-Created the foundation files on branch `phase-1-foundation`.
+Wrote the Phase 2 skills on branch `phase-2-workflow` and opened its PR.
 
 ## Next step
 
-After the Phase 1 PR is approved, start Phase 2 (Workflow skills). Show each skill's name, description, and outline before writing it.
+After the Phase 2 PR is merged, start Phase 3 (Enforcement). After the CI job has run once on a PR, propose a `required_status_checks` rule for `check.sh` on the `protect-main` ruleset.
 
 ## Open issues
 
-- `NOTES.md` (the user's conventions) is not in the repo yet. Needed for Phases 2 and 4.
+- `notes.md` (the user's conventions) stays untracked on purpose. The Phase 2 skills are reconciled with it.
