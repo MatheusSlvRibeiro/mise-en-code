@@ -1,10 +1,34 @@
 {
   "features": [
-    { "id": "P1", "title": "Foundation: READMEs, AGENTS.md, CLAUDE.md, install.sh, templates", "status": "verified" },
-    { "id": "P2", "title": "Workflow skills: wf-git-flow, wf-verify-done, wf-session-handoff", "status": "implemented" },
-    { "id": "P3", "title": "Enforcement: hooks, settings.example.json, structure CI", "status": "pending" },
-    { "id": "P4", "title": "Stack skills: be-django-api, be-jwt-auth, fe-react-ui, fe-forms, test-pytest, test-vitest", "status": "pending" },
-    { "id": "P5", "title": "ADRs: template, flat skills, no mandatory MCP, hooks", "status": "pending" },
-    { "id": "P6", "title": "Agents: Explore, test-runner, reviewer, plus model-choice ADR", "status": "pending" }
+    {
+      "id": "P1",
+      "title": "Foundation: READMEs, AGENTS.md, CLAUDE.md, install.sh, templates",
+      "status": "verified"
+    },
+    {
+      "id": "P2",
+      "title": "Workflow skills: wf-git-flow, wf-verify-done, wf-session-handoff",
+      "status": "verified"
+    },
+    {
+      "id": "P3",
+      "title": "Enforcement: hooks, settings.example.json, structure CI",
+      "status": "pending"
+    },
+    {
+      "id": "P4",
+      "title": "Stack skills: be-django-api, be-jwt-auth, fe-react-ui, fe-forms, test-pytest, test-vitest",
+      "status": "pending"
+    },
+    {
+      "id": "P5",
+      "title": "ADRs: template, flat skills, no mandatory MCP, hooks",
+      "status": "pending"
+    },
+    {
+      "id": "P6",
+      "title": "Agents: Explore, test-runner, reviewer, plus model-choice ADR",
+      "status": "pending"
+    }
   ]
 }
