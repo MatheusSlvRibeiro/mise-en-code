@@ -13,7 +13,7 @@
     {
       "id": "P3",
       "title": "Enforcement: hooks, settings.example.json, structure CI",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P4",
@@ -29,6 +29,11 @@
       "id": "P6",
       "title": "Agents: Explore, test-runner, reviewer, plus model-choice ADR",
       "status": "pending"
+    },
+    {
+      "id": "P7",
+      "title": "Project board: wf-project-board skill, close-on-merge workflow",
+      "status": "implemented"
     }
   ]
 }

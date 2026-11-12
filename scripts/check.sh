@@ -70,7 +70,7 @@ fi
 
 # Shell scripts.
 if command -v shellcheck >/dev/null 2>&1; then
-  shellcheck install.sh hooks/*.sh scripts/*.sh || fail "shellcheck reported problems"
+  shellcheck install.sh hooks/*.sh scripts/*.sh skills/*/*.sh || fail "shellcheck reported problems"
 elif [ -n "${CI:-}" ]; then
   fail "shellcheck is not installed"
 else
