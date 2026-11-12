@@ -22,6 +22,7 @@ O foco é Django + DRF, React + Vite + TypeScript e fluxos de trabalho no GitHub
 skills/       um diretório plano por skill, cada um com um SKILL.md
 agents/       subagentes com modelo fixo e ferramentas mínimas
 hooks/        scripts shell para hooks do Claude Code
+scripts/      check.sh, as checagens de estrutura que o CI executa
 templates/    feature_list.json e progress.md para os seus projetos
 docs/decisions/   ADRs
 ```
@@ -34,7 +35,9 @@ cd mise-en-code
 ./install.sh
 ```
 
-O `install.sh` cria um symlink de cada skill em `~/.claude/skills/` e de cada agente em `~/.claude/agents/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+O `install.sh` cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+
+Os hooks só rodam depois de registrados. Copie as entradas que quiser de [`settings.example.json`](settings.example.json) para o seu `~/.claude/settings.json`.
 
 ## Status
 

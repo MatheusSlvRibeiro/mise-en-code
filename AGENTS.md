@@ -8,6 +8,7 @@ how agents work across Django + DRF and React + Vite + TypeScript projects.
 - `skills/<name>/SKILL.md`: one flat directory per skill. Prefixes: `wf-`, `be-`, `fe-`, `test-`.
 - `agents/<name>.md`: subagents. The frontmatter sets `model` and `tools`.
 - `hooks/`: shell scripts wired up through `settings.example.json`.
+- `scripts/check.sh`: the structure checks CI runs. Run it before opening a PR.
 - `templates/`: `feature_list.json` and `progress.md` for downstream projects.
 - `docs/decisions/`: ADRs, indexed in `docs/decisions/README.md`.
 
