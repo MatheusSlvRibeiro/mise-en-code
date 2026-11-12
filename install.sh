@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Symlink every skill and agent from this repo into ~/.claude/. Safe to re-run.
+# Symlink every skill, agent, and hook from this repo into ~/.claude/. Safe to re-run.
 set -euo pipefail
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,7 +19,7 @@ link() {
 }
 
 skipped=0
-mkdir -p "$claude_dir/skills" "$claude_dir/agents"
+mkdir -p "$claude_dir/skills" "$claude_dir/agents" "$claude_dir/hooks"
 
 for dir in "$repo"/skills/*/; do
   [ -d "$dir" ] || continue
@@ -29,6 +29,11 @@ done
 for file in "$repo"/agents/*.md; do
   [ -f "$file" ] || continue
   link "$file" "$claude_dir/agents/$(basename "$file")"
+done
+
+for file in "$repo"/hooks/*.sh; do
+  [ -f "$file" ] || continue
+  link "$file" "$claude_dir/hooks/$(basename "$file")"
 done
 
 exit "$skipped"
