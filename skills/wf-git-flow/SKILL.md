@@ -1,19 +1,19 @@
 ---
 name: wf-git-flow
-description: Defines how to branch, commit, and open pull requests in a GitHub squash-merge flow. Use before creating a branch, committing, or opening a PR.
+description: Defines how to branch, commit, and open pull requests in a GitHub flow where work goes into `preview` and is then promoted to `main`. Use before creating a branch, committing, or opening a PR.
 ---
 
 # Git flow
 
 ## Branches
 
-- Start every unit of work from an up-to-date `main`: `git checkout main && git pull --ff-only`.
+- Start every unit of work from an up-to-date `preview`: `git checkout preview && git pull --ff-only`.
 - Name: `<type>/<short-kebab-description>`, in English. Describe the work, never the issue number: `feat/webhook-receiver`, not `feat/issue-42`.
 - Types: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`. The type is the dominant type of the work.
 - Every branch starts from an issue.
 - One branch, one PR.
 - Projects have two long-lived branches: `main` (production) and `preview` (staging).
-- PRs target `preview`. Once approved there, the change goes to `main`. The user does the promotion.
+- PRs target `preview`. Once approved there, the change goes to `main`. The user does the promotion, as a PR from `preview` to `main`.
 
 ## Commits
 
@@ -25,7 +25,7 @@ description: Defines how to branch, commit, and open pull requests in a GitHub s
 
 ## Pull requests
 
-- The repo is squash-only: the PR title becomes the commit on the target branch, and the PR body becomes its message. Write both for that.
+- PRs into `preview` are squash-merged: the PR title becomes the commit on `preview`, and the PR body becomes its message. Write both for that. The promotion PR into `main` is merged with a merge commit.
 - Title: Conventional Commits format, at most 72 characters.
 - Body:
   ```
@@ -43,4 +43,4 @@ description: Defines how to branch, commit, and open pull requests in a GitHub s
 
 ## After merge
 
-- Sync `main`, then delete the local branch. Because of the squash, use `git branch -D`.
+- Sync `preview`, then delete the local branch. Because of the squash, use `git branch -D`.
