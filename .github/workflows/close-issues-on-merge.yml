@@ -1,10 +1,10 @@
 name: Close linked issues
 
-# GitHub only auto-closes issues when a PR merges into the default branch (main).
-# Work lands in preview first, so close the issues here instead.
+# GitHub only auto-closes issues when a closing keyword reaches the default branch (main).
+# Work lands in preview first. The squash commit keeps the PR body, so read the keyword
+# from the commit message after it is pushed to preview.
 on:
-  pull_request_target:
-    types: [closed]
+  push:
     branches: [preview]
 
 permissions:
@@ -12,17 +12,16 @@ permissions:
 
 jobs:
   close:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Close issues named with a closing keyword
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_BODY: ${{ github.event.pull_request.body }}
+          COMMIT_SHA: ${{ github.sha }}
+          MESSAGES: ${{ toJSON(github.event.commits.*.message) }}
         run: |
-          numbers=$(grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? +#[0-9]+' <<<"$PR_BODY" | grep -oE '[0-9]+$' | sort -un || true)
+          numbers=$(grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? +#[0-9]+' <<<"$MESSAGES" | grep -oE '[0-9]+$' | sort -un || true)
           for n in $numbers; do
-            gh issue close "$n" --reason completed --comment "Closed by #$PR_NUMBER (merged into preview)."
+            gh issue close "$n" --reason completed --comment "Closed by ${COMMIT_SHA::7} (merged into preview)."
           done
