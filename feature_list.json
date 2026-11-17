@@ -17,8 +17,8 @@
     },
     {
       "id": "P4",
-      "title": "Stack skills: be-django-api, be-jwt-auth, fe-react-ui, fe-forms, test-pytest, test-vitest",
-      "status": "pending"
+      "title": "Stack skills: be-django-api, be-jwt-auth, fe-react-ui, fe-forms, fe-tailwind, test-pytest, test-vitest",
+      "status": "implemented"
     },
     {
       "id": "P5",
