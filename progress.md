@@ -6,15 +6,15 @@ Phases 1–4 and P7 (project board) are verified: foundation, workflow skills, h
 
 ## Last session
 
-Found that the close-on-merge workflow never ran: its `pull_request_target` trigger did not fire after a PR merged into `preview`, so issues stayed open until closed by hand. Changed the trigger to `push` on `preview`, reading `Closes #N` from the squash commit message.
+Fixed the close-on-merge workflow in two steps. Its `pull_request_target` trigger never fired, so it now runs on `push` to `preview`. On its first run it matched keywords written in prose (and tried to close a PR number), so it now accepts only a line that is exactly `Closes #N`, and a failure on one issue no longer hides the others.
 
 ## Next step
 
-Confirm the fix: when the fix PR merges into `preview`, its own issue (`Closes #12`) should close with a comment from the workflow, and not by hand. Then start Phase 5 (ADRs): `docs/decisions/` with a template and the initial ADRs. Then Phase 6 (agents).
+Confirm the fix: when this PR merges into `preview`, issue #12 should close with a comment from the workflow, and not by hand. Commenting on an issue with `issues: write` is also untested until then. Then start Phase 5 (ADRs): `docs/decisions/` with a template and the initial ADRs. Then Phase 6 (agents).
 
 ## Open issues
 
-- The new close-on-merge trigger is untested until its own PR merges.
+- Write `Closes #N` alone on its own line in a PR body, and never use a closing keyword followed by a number in prose: the workflow reads the squash message.
 - Lint-config templates (`ruff`, `eslint`) are planned as a later item (P8). Until then, rules a linter could enforce (default exports, `any`, inline styles, arbitrary Tailwind values, `fields = '__all__'`) are prose in the skills.
 - Cookie auth is the standard for new projects. An existing project that uses a Bearer header is not covered by `be-jwt-auth` and would need a separate decision.
 - Not decided: the sprint cadence (iteration length and start day).
