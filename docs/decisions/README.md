@@ -11,3 +11,4 @@ Start from [template.md](template.md). Number records in order (`0006-short-titl
 | [0003](0003-hooks-over-prose.md) | Enforce yes/no rules with hooks and CI, not prose | Accepted |
 | [0004](0004-preview-main-flow.md) | Work flows through `preview` into `main` | Accepted |
 | [0005](0005-cookie-jwt-auth.md) | Authenticate SPAs with JWT in httpOnly cookies | Accepted |
+| [0006](0006-agent-models-and-tools.md) | Pin a model and a minimal tool set for each agent | Accepted |
