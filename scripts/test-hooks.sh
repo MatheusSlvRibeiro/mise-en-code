@@ -76,4 +76,49 @@ lint "$proj/a.ts" 0 "passing eslint"
 rm "$proj/node_modules/.bin/eslint"
 lint "$proj/a.ts" 0 "no eslint in project is skipped"
 
+# readonly-bash: only read-only git commands and output filters pass.
+ro() { # ro <want-exit> <command>
+  local code=0
+  jq -n --arg c "$2" '{tool_input:{command:$c}}' |
+    "$root/hooks/readonly-bash.sh" >/dev/null 2>&1 || code=$?
+  expect "$1" "readonly-bash $2" "$code"
+}
+
+ro 0 "git diff main...HEAD"
+ro 0 "git diff --stat | head -20"
+ro 0 "git log --oneline -5"
+ro 0 "git -C sub status"
+ro 0 "git --no-pager show HEAD:README.md"
+ro 0 "git branch --show-current"
+ro 0 "git rev-parse --show-toplevel"
+ro 0 "git grep -n foo | wc -l"
+ro 0 "git merge-base preview HEAD && git diff --name-only preview...HEAD"
+ro 0 "ls -la"
+ro 2 "rm -rf build"
+ro 2 "git push origin feat/x"
+ro 2 "git commit -m x"
+ro 2 "git checkout main"
+ro 2 "git branch newname"
+ro 2 "git branch -D old"
+ro 2 "git diff > out.patch"
+ro 2 "git diff >> out.patch"
+ro 2 "git diff --output=out.patch"
+ro 2 "git log --output=x"
+ro 2 "git -c core.pager=sh log"
+ro 2 "git diff --ext-diff"
+ro 2 "git status; rm x"
+ro 2 "git status && rm x"
+ro 2 "git diff | tee out.patch"
+ro 2 "git diff | sort -o out.txt"
+# shellcheck disable=SC2016  # these are literal command strings fed to the hook
+ro 2 'git diff $(rm x)'
+# shellcheck disable=SC2016
+ro 2 'git diff `rm x`'
+ro 2 "FOO=1 git status"
+ro 2 "echo hi"
+ro 2 "cat README.md"
+ro 2 "curl https://example.com"
+ro 2 "python3 -c 'print(1)'"
+ro 2 "git"
+
 [ "$failures" = 0 ] || { echo "$failures hook test(s) failed"; exit 1; }

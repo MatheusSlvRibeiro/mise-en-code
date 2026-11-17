@@ -27,8 +27,8 @@
     },
     {
       "id": "P6",
-      "title": "Agents: Explore, test-runner, reviewer, plus model-choice ADR",
-      "status": "pending"
+      "title": "Agents: Explore, test-runner, reviewer, read-only hook, plus model-choice ADR",
+      "status": "implemented"
     },
     {
       "id": "P7",

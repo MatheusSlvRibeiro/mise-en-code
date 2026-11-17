@@ -68,6 +68,24 @@ if [ -n "${BASE_REF:-}" ]; then
   [ "$en" = "$pt" ] || fail "README.md and README.pt-BR.md must change in the same PR"
 fi
 
+# Agents: named after the file, a pinned model, explicit tools, no write tools,
+# and any hook script they reference exists in hooks/.
+for file in agents/*.md; do
+  [ -f "$file" ] || continue
+  name="$(basename "$file" .md)"
+  [ "$(frontmatter "$file" name)" = "$name" ] || fail "$file: name must equal the file name '$name'"
+  [ -n "$(frontmatter "$file" description)" ] || fail "$file: missing description"
+  [[ "$(frontmatter "$file" model)" =~ ^(haiku|sonnet|opus)$ ]] || fail "$file: model must be haiku, sonnet, or opus"
+  tools="$(frontmatter "$file" tools)"
+  [ -n "$tools" ] || fail "$file: tools must be listed explicitly"
+  if [[ "$tools" =~ (Edit|Write|NotebookEdit) ]]; then
+    fail "$file: agents must not have write tools"
+  fi
+  while IFS= read -r hook; do
+    [ -f "hooks/$hook" ] || fail "$file: references missing hooks/$hook"
+  done < <(grep -oE '\.claude/hooks/[A-Za-z0-9._-]+\.sh' "$file" | sed 's|.*/||')
+done
+
 # Decision records: every ADR is listed in the index and has a valid Status line.
 [ -f docs/decisions/README.md ] || fail "docs/decisions/README.md is missing"
 for adr in docs/decisions/[0-9][0-9][0-9][0-9]-*.md; do
