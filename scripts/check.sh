@@ -68,6 +68,16 @@ if [ -n "${BASE_REF:-}" ]; then
   [ "$en" = "$pt" ] || fail "README.md and README.pt-BR.md must change in the same PR"
 fi
 
+# Decision records: every ADR is listed in the index and has a valid Status line.
+[ -f docs/decisions/README.md ] || fail "docs/decisions/README.md is missing"
+for adr in docs/decisions/[0-9][0-9][0-9][0-9]-*.md; do
+  [ -f "$adr" ] || continue
+  grep -qF "$(basename "$adr")" docs/decisions/README.md 2>/dev/null ||
+    fail "docs/decisions/README.md does not list $(basename "$adr")"
+  grep -qE '^Status: (Proposed|Accepted|Superseded by [0-9]{4})$' "$adr" ||
+    fail "$adr: needs a line 'Status: Proposed', 'Accepted', or 'Superseded by NNNN'"
+done
+
 # Shell scripts.
 if command -v shellcheck >/dev/null 2>&1; then
   shellcheck install.sh hooks/*.sh scripts/*.sh skills/*/*.sh || fail "shellcheck reported problems"
