@@ -18,7 +18,7 @@
     {
       "id": "P4",
       "title": "Stack skills: be-django-api, be-jwt-auth, fe-react-ui, fe-forms, fe-tailwind, test-pytest, test-vitest",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P5",
@@ -33,7 +33,7 @@
     {
       "id": "P7",
       "title": "Project board: wf-project-board skill, close-on-merge workflow",
-      "status": "implemented"
+      "status": "verified"
     }
   ]
 }
