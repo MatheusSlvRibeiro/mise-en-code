@@ -38,6 +38,7 @@ description: Defines how to branch, commit, and open pull requests in a GitHub f
   Closes #N
   ```
 - One `Closes #N` line per issue. A branch may close several related issues.
+- Keep `Closes #N` alone on its own line, and never write a closing keyword followed by a number anywhere else in the body, not even in backticks. A workflow closes whatever line reads exactly that. To mention an issue in prose, write `see #12`.
 - Open the PR only after `wf-verify-done` passes.
 - The user approves and merges. Never merge a PR yourself.
 

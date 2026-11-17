@@ -19,9 +19,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           COMMIT_SHA: ${{ github.sha }}
-          MESSAGES: ${{ toJSON(github.event.commits.*.message) }}
+          MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          numbers=$(grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? +#[0-9]+' <<<"$MESSAGES" | grep -oE '[0-9]+$' | sort -un || true)
+          # Only a line that is just "Closes #N" counts, so prose that mentions the keyword closes nothing.
+          numbers=$(grep -iE '^(close[sd]?|fix(e[sd])?|resolve[sd]?):? +#[0-9]+[[:space:]]*$' <<<"$MESSAGE" | grep -oE '[0-9]+' | sort -un || true)
+          status=0
           for n in $numbers; do
-            gh issue close "$n" --reason completed --comment "Closed by ${COMMIT_SHA::7} (merged into preview)."
+            gh issue close "$n" --reason completed --comment "Closed by ${COMMIT_SHA::7} (merged into preview)." || status=1
           done
+          exit $status
