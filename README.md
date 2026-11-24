@@ -41,7 +41,7 @@ cd mise-en-code
 
 `install.sh` symlinks every skill into `~/.claude/skills/`, every agent into `~/.claude/agents/`, and every hook into `~/.claude/hooks/`. It is safe to run again, and it never overwrites something that is not already a link to this repo.
 
-Hooks only run once they are registered. Copy the entries you want from [`settings.example.json`](settings.example.json) into your `~/.claude/settings.json`.
+Hooks only run once they are registered. `install-all.sh` offers to do it for you: it shows the change to `~/.claude/settings.json`, backs the file up, adds the `block-main-push` and `lint-on-edit` hooks, and leaves your other hooks (RTK's, for example) untouched. To do it by hand, copy the entries you want from [`settings.example.json`](settings.example.json). Restart Claude Code afterwards.
 
 ## Optional: RTK
 

@@ -27,6 +27,7 @@ RTK rewrites commands, so the harness's own hooks see `rtk git diff` and not `gi
   - RTK comes from Homebrew when available. Otherwise the script downloads RTK's official install script to a temporary file, prints its path and size, and runs it only after a yes.
   - Registering RTK's hook is a separate question. The script shows `rtk init -g --dry-run` first, backs up `settings.json`, and points to `rtk init -g --uninstall` for undoing it.
   - It does not add package repositories. `gh` on apt, which needs GitHub's repository, is left to the user.
+- After linking, `install-all.sh` offers to register two of the harness's hooks, `block-main-push.sh` and `lint-on-edit.sh`, in `settings.json`. It shows the diff first, backs the file up with a timestamp, adds an entry only when no hook with the same command exists, and leaves every other entry (RTK's hook, for example) as it is. It does nothing when `jq` is missing, when `settings.json` is not valid JSON, or when the hook scripts are not linked yet, because a hook that points to a missing file fails on every tool call. `readonly-bash.sh` is not registered: only the `reviewer` agent uses it.
 - `install.sh` stays what it was: it only links files and installs nothing.
 
 ## Consequences

@@ -41,7 +41,7 @@ O `install-all.sh` não instala nada sem um sim. O `--yes` responde às pergunta
 
 O `install.sh` cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
 
-Os hooks só rodam depois de registrados. Copie as entradas que quiser de [`settings.example.json`](settings.example.json) para o seu `~/.claude/settings.json`.
+Os hooks só rodam depois de registrados. O `install-all.sh` se oferece para fazer isso: mostra a mudança no `~/.claude/settings.json`, faz backup do arquivo, adiciona os hooks `block-main-push` e `lint-on-edit` e não mexe nos seus outros hooks (o do RTK, por exemplo). Para fazer à mão, copie as entradas que quiser de [`settings.example.json`](settings.example.json). Reinicie o Claude Code depois.
 
 ## Opcional: RTK
 
