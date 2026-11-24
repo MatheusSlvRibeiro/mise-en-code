@@ -27,6 +27,16 @@ filters=" head tail wc grep cut ls pwd "
 while IFS= read -r segment; do
   read -ra words <<<"$segment"
   [ "${#words[@]}" -gt 0 ] || continue
+
+  # RTK rewrites `git diff` to `rtk git diff`, and `rtk proxy` runs a command unfiltered.
+  # Judge the command underneath, so the prefix neither opens a hole nor blocks a safe call.
+  if [ "${words[0]}" = rtk ]; then
+    words=("${words[@]:1}")
+    if [ "${words[0]:-}" = proxy ]; then
+      words=("${words[@]:1}")
+    fi
+    [ "${#words[@]}" -gt 0 ] || deny "rtk needs a command"
+  fi
   first="${words[0]}"
 
   if [ "$first" = git ]; then

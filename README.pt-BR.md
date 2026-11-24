@@ -35,9 +35,15 @@ cd mise-en-code
 ./install.sh
 ```
 
-O `install.sh` cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+O `install.sh` é o único instalador. Ele confere as dependências (`git`, `gh`, `jq`) e se oferece para instalar o que faltar, oferece o [RTK](#opcional-rtk), liga as skills, os agentes e os hooks, e se oferece para registrar os hooks. Toda pergunta tem "não" como padrão, e sem terminal ele só cria os links. O `--yes` responde às perguntas, o `--dry-run` só lista o que faria, e o RTK exige `--with-rtk` ou um sim digitado.
 
-Os hooks só rodam depois de registrados. Copie as entradas que quiser de [`settings.example.json`](settings.example.json) para o seu `~/.claude/settings.json`.
+A etapa de ligação cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+
+Os hooks só rodam depois de registrados. O `install.sh` se oferece para fazer isso: mostra a mudança no `~/.claude/settings.json`, faz backup do arquivo, adiciona os hooks `block-main-push` e `lint-on-edit` e não mexe nos seus outros hooks (o do RTK, por exemplo). Para fazer à mão, copie as entradas que quiser de [`settings.example.json`](settings.example.json). Reinicie o Claude Code depois.
+
+## Opcional: RTK
+
+O [RTK](https://github.com/rtk-ai/rtk) encurta a saída dos comandos antes de ela chegar ao modelo, o que economiza tokens. Nada aqui exige o RTK. Se você o usa, rode `rtk gain` para confirmar que é o pacote certo, e use `rtk proxy <comando>` quando precisar da saída exata, sem filtro. Veja o [ADR 0007](docs/decisions/0007-rtk-optional.md).
 
 ## Status
 

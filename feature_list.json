@@ -23,17 +23,32 @@
     {
       "id": "P5",
       "title": "ADRs: template, index, flat skills, no mandatory MCP, hooks, preview/main flow, cookie auth",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P6",
       "title": "Agents: Explore, test-runner, reviewer, read-only hook, plus model-choice ADR",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P7",
       "title": "Project board: wf-project-board skill, close-on-merge workflow",
       "status": "verified"
+    },
+    {
+      "id": "P8",
+      "title": "Lint-config templates: ruff and eslint, so lint-enforceable rules stop being prose",
+      "status": "pending"
+    },
+    {
+      "id": "P9",
+      "title": "Optional RTK integration and one guided installer",
+      "status": "implemented"
+    },
+    {
+      "id": "P10",
+      "title": "Versioning: SemVer from Conventional Commits, release workflow on main",
+      "status": "pending"
     }
   ]
 }

@@ -42,6 +42,9 @@ push main "git push -u origin feat/x" 0
 push feat/x "git push" 0
 push feat/x "git push -u origin feat/x" 0
 push feat/x "git push --force-with-lease origin feat/x" 0
+push feat/x "rtk git push origin main" 2
+push feat/x "rtk proxy git push origin HEAD:preview" 2
+push feat/x "rtk git push -u origin feat/x" 0
 push main "git status" 0
 push main "git commit -m 'fix main'" 0
 
@@ -110,6 +113,18 @@ ro 2 "git status; rm x"
 ro 2 "git status && rm x"
 ro 2 "git diff | tee out.patch"
 ro 2 "git diff | sort -o out.txt"
+# RTK rewrites commands to `rtk <command>`; the hook judges the command underneath.
+ro 0 "rtk git diff --stat"
+ro 0 "rtk git status && rtk git log --oneline -3"
+ro 0 "rtk proxy git diff main...HEAD"
+ro 0 "rtk grep -n foo"
+ro 2 "rtk git push origin main"
+ro 2 "rtk proxy git push origin main"
+ro 2 "rtk proxy rm -rf x"
+ro 2 "rtk rm -rf x"
+ro 2 "rtk gain"
+ro 2 "rtk"
+ro 2 "rtk proxy"
 # shellcheck disable=SC2016  # these are literal command strings fed to the hook
 ro 2 'git diff $(rm x)'
 # shellcheck disable=SC2016
