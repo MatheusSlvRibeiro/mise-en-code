@@ -98,7 +98,7 @@ done
 
 # Shell scripts.
 if command -v shellcheck >/dev/null 2>&1; then
-  shellcheck install.sh install-all.sh hooks/*.sh scripts/*.sh skills/*/*.sh || fail "shellcheck reported problems"
+  shellcheck install.sh hooks/*.sh scripts/*.sh skills/*/*.sh || fail "shellcheck reported problems"
 elif [ -n "${CI:-}" ]; then
   fail "shellcheck is not installed"
 else
@@ -106,7 +106,7 @@ else
 fi
 
 ./scripts/test-hooks.sh >/dev/null || fail "hook tests failed (run scripts/test-hooks.sh)"
-./scripts/test-install-all.sh >/dev/null || fail "install-all tests failed (run scripts/test-install-all.sh)"
+./scripts/test-install.sh >/dev/null || fail "install tests failed (run scripts/test-install.sh)"
 
 if [ "$failures" -gt 0 ]; then
   echo "$failures check(s) failed"

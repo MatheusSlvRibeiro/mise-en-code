@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Runs install-all.sh against stub tools in a throwaway PATH. Nothing is really installed:
+# Runs install.sh against stub tools in a throwaway PATH. Nothing is really installed:
 # each stub only appends the command it received to a log, and the tests read that log.
 set -eo pipefail
 
@@ -14,7 +14,7 @@ fail() {
   failures=$((failures + 1))
 }
 
-# The utilities install-all.sh and install.sh need, and nothing else, so a tool can be "missing".
+# The utilities install.sh needs, and nothing else, so a tool can be "missing".
 core="bash sh env dirname basename sed id wc mktemp rm head grep cp chmod mkdir readlink ln cat tr date diff mv tail"
 
 new_sandbox() { # sets: d bin claude log out
@@ -96,7 +96,7 @@ run_installer() {
   local input="$1"
   shift
   set +e
-  printf '%s' "$input" | PATH="$bin" HOME="$d" CLAUDE_DIR="$claude" LOG="$log" "$root/install-all.sh" "$@" >"$out" 2>&1
+  printf '%s' "$input" | PATH="$bin" HOME="$d" CLAUDE_DIR="$claude" LOG="$log" "$root/install.sh" "$@" >"$out" 2>&1
   rc=$?
   set -e
 }
@@ -119,20 +119,22 @@ has_backup() { compgen -G "$claude/settings.json.mise-en-code-backup-*" >/dev/nu
 count_cmd() { jq "[.. | objects | select(has(\"command\")) | select(.command | contains(\"$1\"))] | length" "$claude/settings.json"; }
 no_install_calls() { ! grep -qE '^(sudo|apt-get|brew|curl|rtk-installer-ran)' "$log"; }
 
-# 1. Everything present, answer no to RTK and to linking: nothing is installed.
+# 1. Everything present, answer no to RTK and to registering hooks: nothing is installed,
+#    but the links are made without asking.
 new_sandbox
 base_tools
 stub shellcheck
 run_installer $'n\nn\n'
 check "all present, answers no: exit 0" test "$rc" = 0
 check "all present, answers no: nothing installed" no_install_calls
-check "links declined: hooks are not registered, settings.json is not created" printed 'not linked.*not registered'
-check "links declined: no settings.json appears" test ! -f "$claude/settings.json"
+check "links are made without asking" test -L "$claude/skills/wf-git-flow"
+check "links include agents and hooks" test "$(test -L "$claude/agents/reviewer.md" && test -L "$claude/hooks/block-main-push.sh" && echo yes)" = yes
+check "registration declined: no settings.json appears" test ! -f "$claude/settings.json"
 
 # 2. jq missing: yes to jq, no to the rest.
 new_sandbox
 stub git; stub gh; stub sudo; stub apt-get; stub shellcheck
-run_installer $'y\nn\nn\n'
+run_installer $'y\nn\n'
 check "jq missing, yes: installs jq with sudo apt-get" logged '^sudo apt-get install -y jq$'
 check "jq missing, yes: does not install anything else" not logged 'apt-get install -y shellcheck|curl|brew'
 
@@ -150,7 +152,7 @@ run_installer '' --yes
 check "--yes: installs jq" logged '^sudo apt-get install -y jq$'
 check "--yes: installs shellcheck" logged '^sudo apt-get install -y shellcheck$'
 check "--yes: does not install RTK" not logged '^(curl|brew)'
-check "--yes: runs install.sh (links into CLAUDE_DIR)" test -d "$claude/skills"
+check "--yes: links into CLAUDE_DIR" test -d "$claude/skills"
 check "--yes without jq: hooks are not registered" printed 'jq is missing, so the hooks were not registered'
 
 # 5. --dry-run lists commands and runs none.
@@ -160,6 +162,7 @@ run_installer '' --dry-run
 check "--dry-run: lists the jq install" printed '^\+ sudo apt-get install -y jq$'
 check "--dry-run: runs nothing" no_install_calls
 check "--dry-run: links nothing" test ! -d "$claude/skills"
+check "--dry-run: lists the links it would make" printed 'would link'
 
 # 6. --with-rtk without brew: downloads the script, runs it, verifies, registers the hook.
 new_sandbox
@@ -215,7 +218,8 @@ check "RTK present and registered: no install" no_install_calls
 
 # 11. gh missing with apt: not installed automatically, says where to get it.
 new_sandbox
-stub git; stub jq; stub sudo; stub apt-get; stub shellcheck
+stub git; stub sudo; stub apt-get; stub shellcheck
+ln -s "$(command -v jq)" "$bin/jq"
 run_installer $'n\nn\n'
 check "gh missing (apt): no install attempt" no_install_calls
 check "gh missing (apt): points to cli.github.com" printed 'cli.github.com'
@@ -226,7 +230,7 @@ base_tools
 run_installer '' --nope
 check "unknown option: exit 2" test "$rc" = 2
 run_installer '' --help
-check "--help: exit 0 and shows usage" printed 'Usage: ./install-all.sh'
+check "--help: exit 0 and shows usage" printed 'Usage: ./install.sh'
 
 # 13. Registering hooks next to an existing RTK hook: RTK's entry is kept, ours are added once.
 new_sandbox
@@ -234,7 +238,7 @@ base_tools
 stub shellcheck
 stub_rtk
 printf '{"model":"opus","hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"rtk hook claude"}]}]}}\n' >"$claude/settings.json"
-run_installer $'y\ny\n'
+run_installer $'y\n'
 check "register: RTK's hook is kept" test "$(count_cmd 'rtk hook claude')" = 1
 check "register: block-main-push is added" test "$(count_cmd 'block-main-push.sh')" = 1
 check "register: lint-on-edit is added" test "$(count_cmd 'lint-on-edit.sh')" = 1
@@ -246,7 +250,7 @@ check "register: readonly-bash is not registered globally" test "$(count_cmd 're
 
 # 14. A second run changes nothing and adds no duplicate.
 before="$(jq -S . "$claude/settings.json")"
-run_installer $'y\ny\n'
+run_installer $'y\n'
 check "register twice: says already registered" printed 'already registered'
 check "register twice: no duplicate block-main-push" test "$(count_cmd 'block-main-push.sh')" = 1
 check "register twice: settings.json is unchanged" test "$(jq -S . "$claude/settings.json")" = "$before"
@@ -255,7 +259,7 @@ check "register twice: settings.json is unchanged" test "$(jq -S . "$claude/sett
 new_sandbox
 base_tools
 stub shellcheck
-run_installer $'n\ny\ny\n'
+run_installer $'n\ny\n'
 check "no settings.json: it is created with both hooks" test "$(count_cmd 'block-main-push.sh') $(count_cmd 'lint-on-edit.sh')" = "1 1"
 check "no settings.json: nothing to back up" not has_backup
 
@@ -264,7 +268,7 @@ new_sandbox
 base_tools
 stub shellcheck
 printf '{ this is not json' >"$claude/settings.json"
-run_installer $'n\ny\n'
+run_installer $'n\n'
 check "invalid JSON: file is untouched" test "$(cat "$claude/settings.json")" = '{ this is not json'
 check "invalid JSON: says so" printed 'not valid JSON'
 
@@ -273,7 +277,7 @@ new_sandbox
 base_tools
 stub shellcheck
 printf '{"hooks":{}}\n' >"$claude/settings.json"
-run_installer $'n\ny\nn\n'
+run_installer $'n\nn\n'
 check "decline: settings.json is unchanged" test "$(cat "$claude/settings.json")" = '{"hooks":{}}'
 check "decline: no backup is made" not has_backup
 check "decline: points to settings.example.json" printed 'settings.example.json'
@@ -287,6 +291,7 @@ run_installer '' --dry-run
 check "--dry-run: shows what would change" printed 'block-main-push.sh'
 check "--dry-run: settings.json is unchanged" test "$(cat "$claude/settings.json")" = '{"hooks":{}}'
 check "--dry-run: no backup is made" not has_backup
+check "--dry-run: nothing was linked" test ! -e "$claude/hooks/block-main-push.sh"
 
 # 19. --yes registers without typing, and still never installs RTK.
 new_sandbox
@@ -298,5 +303,20 @@ run_installer '' --yes
 check "--yes: registers both hooks" test "$(count_cmd 'block-main-push.sh') $(count_cmd 'lint-on-edit.sh')" = "1 1"
 check "--yes: still no RTK" not logged '^(curl|brew)'
 
-[ "$failures" = 0 ] || { echo "$failures install-all test(s) failed"; exit 1; }
-echo "all install-all tests passed"
+# 20. A hook path already taken by a file that is not a link to this repo: it is skipped, the
+#     exit code says so, and the hooks are not registered, because settings.json would point
+#     to a script that is not ours.
+new_sandbox
+base_tools
+stub shellcheck
+mkdir -p "$claude/hooks"
+printf 'not ours\n' >"$claude/hooks/block-main-push.sh"
+run_installer $'n\n'
+check "taken path: the file is left alone" test "$(cat "$claude/hooks/block-main-push.sh")" = 'not ours'
+check "taken path: exit code is 1" test "$rc" = 1
+check "taken path: says it was skipped" printed 'skipped .*block-main-push.sh'
+check "taken path: hooks are not registered" printed 'not linked.*not registered'
+check "taken path: no settings.json appears" test ! -f "$claude/settings.json"
+
+[ "$failures" = 0 ] || { echo "$failures install test(s) failed"; exit 1; }
+echo "all install tests passed"
