@@ -34,6 +34,21 @@
       "id": "P7",
       "title": "Project board: wf-project-board skill, close-on-merge workflow",
       "status": "verified"
+    },
+    {
+      "id": "P8",
+      "title": "Lint-config templates: ruff and eslint, so lint-enforceable rules stop being prose",
+      "status": "pending"
+    },
+    {
+      "id": "P9",
+      "title": "Optional RTK integration and install-all.sh",
+      "status": "implemented"
+    },
+    {
+      "id": "P10",
+      "title": "Versioning: SemVer from Conventional Commits, release workflow on main",
+      "status": "pending"
     }
   ]
 }

@@ -12,3 +12,4 @@ Start from [template.md](template.md). Number records in order (`0006-short-titl
 | [0004](0004-preview-main-flow.md) | Work flows through `preview` into `main` | Accepted |
 | [0005](0005-cookie-jwt-auth.md) | Authenticate SPAs with JWT in httpOnly cookies | Accepted |
 | [0006](0006-agent-models-and-tools.md) | Pin a model and a minimal tool set for each agent | Accepted |
+| [0007](0007-rtk-optional.md) | RTK is optional; `install-all.sh` installs it only on request | Accepted |

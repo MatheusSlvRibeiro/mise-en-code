@@ -32,12 +32,20 @@ docs/decisions/   ADRs
 ```bash
 git clone https://github.com/MatheusSlvRibeiro/mise-en-code
 cd mise-en-code
+./install-all.sh   # guided: checks dependencies, offers to install what is missing, then runs install.sh
+# or, if you already have git, gh, and jq:
 ./install.sh
 ```
+
+`install-all.sh` installs nothing without a yes. `--yes` answers the dependency questions, `--dry-run` only lists what it would do, and RTK needs `--with-rtk` or a typed yes.
 
 `install.sh` symlinks every skill into `~/.claude/skills/`, every agent into `~/.claude/agents/`, and every hook into `~/.claude/hooks/`. It is safe to run again, and it never overwrites something that is not already a link to this repo.
 
 Hooks only run once they are registered. Copy the entries you want from [`settings.example.json`](settings.example.json) into your `~/.claude/settings.json`.
+
+## Optional: RTK
+
+[RTK](https://github.com/rtk-ai/rtk) shortens command output before it reaches the model, which saves tokens. Nothing here requires it. If you use it, run `rtk gain` to confirm you have the right package, and use `rtk proxy <command>` when you need the exact, unfiltered output. See [ADR 0007](docs/decisions/0007-rtk-optional.md).
 
 ## Status
 
