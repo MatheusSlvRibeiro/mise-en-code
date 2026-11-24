@@ -23,12 +23,12 @@
     {
       "id": "P5",
       "title": "ADRs: template, index, flat skills, no mandatory MCP, hooks, preview/main flow, cookie auth",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P6",
       "title": "Agents: Explore, test-runner, reviewer, read-only hook, plus model-choice ADR",
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "id": "P7",
