@@ -1,4 +1,4 @@
-# 0008. install-all.sh does not install MemPalace or OpenSpace
+# 0008. install.sh does not install MemPalace or OpenSpace
 
 Status: Accepted
 Date: 2026-11-24
@@ -15,7 +15,7 @@ The maintainer is also considering a knowledge base built from an Obsidian vault
 
 ## Decision
 
-`install-all.sh` offers RTK (0007) and nothing else of this kind. It does not install MemPalace or OpenSpace. This is not a judgment that they are bad; the harness does not need either, and the first question about memory is still open.
+`install.sh` offers RTK (0007) and nothing else of this kind. It does not install MemPalace or OpenSpace. This is not a judgment that they are bad; the harness does not need either, and the first question about memory is still open.
 
 If a memory tool is added later:
 
@@ -28,7 +28,7 @@ If a memory tool is added later:
 
 - Cross-session state stays in `feature_list.json`, `progress.md`, and commits, as 0002 says.
 - Someone who wants MemPalace or OpenSpace installs them by hand, with the caveats above.
-- The Obsidian option is not designed here. Options exist that index a vault into a local vector store and expose search over MCP; evaluating them is a separate piece of work.
+- The Obsidian option is not designed here. Options exist that index a vault into a local vector store and expose search over MCP; evaluating them is a separate piece of work, parked as a backlog issue (#21) with its open questions: where embeddings are computed, where vectors are stored, and whether to build or reuse.
 - Not verified here: the PyPI publisher of MemPalace, what OpenSpace's skill evolution can be configured to do, and the hook behavior of either in a real session beyond the one stop-hook call tested.
 
 ## Alternatives considered

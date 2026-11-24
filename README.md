@@ -32,16 +32,14 @@ docs/decisions/   ADRs
 ```bash
 git clone https://github.com/MatheusSlvRibeiro/mise-en-code
 cd mise-en-code
-./install-all.sh   # guided: checks dependencies, offers to install what is missing, then runs install.sh
-# or, if you already have git, gh, and jq:
 ./install.sh
 ```
 
-`install-all.sh` installs nothing without a yes. `--yes` answers the dependency questions, `--dry-run` only lists what it would do, and RTK needs `--with-rtk` or a typed yes.
+`install.sh` is the only installer. It checks the dependencies (`git`, `gh`, `jq`) and offers to install what is missing, offers [RTK](#optional-rtk), links the skills, agents, and hooks, and offers to register the hooks. Every question defaults to no, and with no terminal it only links files. `--yes` answers the questions, `--dry-run` only lists what it would do, and RTK needs `--with-rtk` or a typed yes.
 
-`install.sh` symlinks every skill into `~/.claude/skills/`, every agent into `~/.claude/agents/`, and every hook into `~/.claude/hooks/`. It is safe to run again, and it never overwrites something that is not already a link to this repo.
+The linking step symlinks every skill into `~/.claude/skills/`, every agent into `~/.claude/agents/`, and every hook into `~/.claude/hooks/`. It is safe to run again, and it never overwrites something that is not already a link to this repo.
 
-Hooks only run once they are registered. `install-all.sh` offers to do it for you: it shows the change to `~/.claude/settings.json`, backs the file up, adds the `block-main-push` and `lint-on-edit` hooks, and leaves your other hooks (RTK's, for example) untouched. To do it by hand, copy the entries you want from [`settings.example.json`](settings.example.json). Restart Claude Code afterwards.
+Hooks only run once they are registered. `install.sh` offers to do it for you: it shows the change to `~/.claude/settings.json`, backs the file up, adds the `block-main-push` and `lint-on-edit` hooks, and leaves your other hooks (RTK's, for example) untouched. To do it by hand, copy the entries you want from [`settings.example.json`](settings.example.json). Restart Claude Code afterwards.
 
 ## Optional: RTK
 

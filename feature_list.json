@@ -42,7 +42,7 @@
     },
     {
       "id": "P9",
-      "title": "Optional RTK integration and install-all.sh",
+      "title": "Optional RTK integration and one guided installer",
       "status": "implemented"
     },
     {

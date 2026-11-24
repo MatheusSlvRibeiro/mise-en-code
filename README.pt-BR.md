@@ -32,16 +32,14 @@ docs/decisions/   ADRs
 ```bash
 git clone https://github.com/MatheusSlvRibeiro/mise-en-code
 cd mise-en-code
-./install-all.sh   # guiado: confere as dependências, oferece instalar o que falta e depois roda o install.sh
-# ou, se você já tem git, gh e jq:
 ./install.sh
 ```
 
-O `install-all.sh` não instala nada sem um sim. O `--yes` responde às perguntas de dependências, o `--dry-run` só lista o que faria, e o RTK exige `--with-rtk` ou um sim digitado.
+O `install.sh` é o único instalador. Ele confere as dependências (`git`, `gh`, `jq`) e se oferece para instalar o que faltar, oferece o [RTK](#opcional-rtk), liga as skills, os agentes e os hooks, e se oferece para registrar os hooks. Toda pergunta tem "não" como padrão, e sem terminal ele só cria os links. O `--yes` responde às perguntas, o `--dry-run` só lista o que faria, e o RTK exige `--with-rtk` ou um sim digitado.
 
-O `install.sh` cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+A etapa de ligação cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
 
-Os hooks só rodam depois de registrados. O `install-all.sh` se oferece para fazer isso: mostra a mudança no `~/.claude/settings.json`, faz backup do arquivo, adiciona os hooks `block-main-push` e `lint-on-edit` e não mexe nos seus outros hooks (o do RTK, por exemplo). Para fazer à mão, copie as entradas que quiser de [`settings.example.json`](settings.example.json). Reinicie o Claude Code depois.
+Os hooks só rodam depois de registrados. O `install.sh` se oferece para fazer isso: mostra a mudança no `~/.claude/settings.json`, faz backup do arquivo, adiciona os hooks `block-main-push` e `lint-on-edit` e não mexe nos seus outros hooks (o do RTK, por exemplo). Para fazer à mão, copie as entradas que quiser de [`settings.example.json`](settings.example.json). Reinicie o Claude Code depois.
 
 ## Opcional: RTK
 
