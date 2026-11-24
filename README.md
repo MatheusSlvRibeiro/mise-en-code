@@ -45,6 +45,10 @@ Hooks only run once they are registered. `install.sh` offers to do it for you: i
 
 [RTK](https://github.com/rtk-ai/rtk) shortens command output before it reaches the model, which saves tokens. Nothing here requires it. If you use it, run `rtk gain` to confirm you have the right package, and use `rtk proxy <command>` when you need the exact, unfiltered output. See [ADR 0007](docs/decisions/0007-rtk-optional.md).
 
+## Versioning
+
+Versions are Git tags (`v0.1.0`), created when `preview` is promoted into `main`. The next version comes from the commit types since the last tag: `feat` is a minor release, `fix` and `perf` are a patch, and a breaking change (`feat!:` or a `BREAKING CHANGE:` line) is a major one. While the major version is 0, a breaking change raises the minor. The notes are in the [GitHub Releases](https://github.com/MatheusSlvRibeiro/mise-en-code/releases). To pin a version, run `git checkout v0.1.0` in your installed copy. See [ADR 0009](docs/decisions/0009-versioning-with-tags.md).
+
 ## Status
 
 Work is tracked in [`feature_list.json`](feature_list.json) and [`progress.md`](progress.md). Status moves `pending` → `implemented` → `verified`, and only the maintainer sets `verified`.

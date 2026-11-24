@@ -14,3 +14,4 @@ Start from [template.md](template.md). Number records in order (`0006-short-titl
 | [0006](0006-agent-models-and-tools.md) | Pin a model and a minimal tool set for each agent | Accepted |
 | [0007](0007-rtk-optional.md) | One installer, with RTK optional | Accepted |
 | [0008](0008-memory-tools-not-installed.md) | `install.sh` does not install MemPalace or OpenSpace | Accepted |
+| [0009](0009-versioning-with-tags.md) | Version with tags computed from the commit types | Accepted |
