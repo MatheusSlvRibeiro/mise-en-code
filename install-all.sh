@@ -71,6 +71,15 @@ run() {
   "$@"
 }
 
+settings="$claude_dir/settings.json"
+backup_made=0
+# backup_settings: copy settings.json once per run, with a timestamp so earlier backups survive.
+backup_settings() {
+  if [ "$backup_made" = 1 ] || [ ! -f "$settings" ]; then return 0; fi
+  run cp "$settings" "$settings.mise-en-code-backup-$(date +%Y%m%d%H%M%S)"
+  backup_made=1
+}
+
 sudo_cmd=""
 if [ "$(id -u)" -ne 0 ] && have sudo; then sudo_cmd="sudo"; fi
 
@@ -192,9 +201,7 @@ if have rtk && [ "$dry_run" = 0 ] && ! grep -qs 'rtk hook' "$claude_dir/settings
   echo "RTK is installed but its hook is not registered in $claude_dir/settings.json. Preview:"
   rtk init -g --dry-run || true
   if ask_rtk "  Register it? (settings.json is backed up first; undo with: rtk init -g --uninstall)"; then
-    if [ -f "$claude_dir/settings.json" ]; then
-      run cp "$claude_dir/settings.json" "$claude_dir/settings.json.mise-en-code-backup"
-    fi
+    backup_settings
     if [ "$with_rtk" = 1 ]; then
       run rtk init -g --auto-patch
     else
@@ -214,5 +221,69 @@ else
   echo "  not linked. Run ./install.sh when you are ready."
 fi
 
+# The hooks that settings.example.json shows. $HOME stays literal: the shell expands it when
+# Claude Code runs the hook. readonly-bash.sh is not here: only the reviewer agent uses it.
+# shellcheck disable=SC2016  # literal $HOME on purpose
+hooks_wanted='[
+  {"event": "PreToolUse", "matcher": "Bash", "command": "$HOME/.claude/hooks/block-main-push.sh"},
+  {"event": "PostToolUse", "matcher": "Edit|Write|MultiEdit", "command": "$HOME/.claude/hooks/lint-on-edit.sh"}
+]'
+
+# Add each wanted hook to settings.json unless a hook with the same command is already there.
+# Other entries (RTK's, for example) are left exactly as they are.
+# shellcheck disable=SC2016  # $wanted and $h are jq variables, not shell ones
+add_hooks_filter='
+  reduce $wanted[] as $h (.;
+    if any(.hooks[$h.event][]?.hooks[]?; .command == $h.command)
+    then .
+    else .hooks[$h.event] = ((.hooks[$h.event] // []) + [{"matcher": $h.matcher, "hooks": [{"type": "command", "command": $h.command}]}])
+    end)'
+
+register_hooks() {
+  local name current updated
+  if ! have jq; then
+    echo "  jq is missing, so the hooks were not registered. Install jq and run this script again."
+    return 0
+  fi
+  if [ "$dry_run" = 0 ]; then
+    # A hook that points to a missing file fails on every tool call, so require the links first.
+    for name in block-main-push lint-on-edit; do
+      if [ ! -x "$claude_dir/hooks/$name.sh" ]; then
+        echo "  $name.sh is not linked in $claude_dir/hooks, so the hooks were not registered."
+        return 0
+      fi
+    done
+  fi
+  if [ -f "$settings" ]; then
+    if ! current="$(jq . "$settings" 2>/dev/null)"; then
+      echo "  $settings is not valid JSON. It was not touched; fix it and run this script again." >&2
+      return 1
+    fi
+  else
+    current="{}"
+  fi
+  updated="$(jq --argjson wanted "$hooks_wanted" "$add_hooks_filter" <<<"$current")"
+  if [ "$(jq -S . <<<"$current")" = "$(jq -S . <<<"$updated")" ]; then
+    echo "  The mise-en-code hooks are already registered in $settings."
+    return 0
+  fi
+  echo "  This would change $settings:"
+  diff -u <(echo "$current") <(echo "$updated") | tail -n +3 | sed 's/^/    /' || true
+  if ask "  Register them? (a backup is taken first)"; then
+    backup_settings
+    echo "+ write $settings"
+    if [ "$dry_run" = 0 ]; then
+      mkdir -p "$claude_dir"
+      echo "$updated" >"$settings.tmp" && mv "$settings.tmp" "$settings"
+    fi
+  else
+    echo "  not registered. Copy the entries you want from settings.example.json."
+  fi
+}
+
 echo
-echo "Next: register the hooks you want in $claude_dir/settings.json, copying from settings.example.json."
+echo "Hooks (block pushes to main and preview, lint on edit)"
+register_hooks || true
+
+echo
+echo "Done. Restart Claude Code so it loads the hooks."
