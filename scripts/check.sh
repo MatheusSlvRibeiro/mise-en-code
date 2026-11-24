@@ -107,6 +107,7 @@ fi
 
 ./scripts/test-hooks.sh >/dev/null || fail "hook tests failed (run scripts/test-hooks.sh)"
 ./scripts/test-install.sh >/dev/null || fail "install tests failed (run scripts/test-install.sh)"
+./scripts/test-release.sh >/dev/null || fail "release tests failed (run scripts/test-release.sh)"
 
 if [ "$failures" -gt 0 ]; then
   echo "$failures check(s) failed"
