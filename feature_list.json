@@ -48,7 +48,7 @@
     {
       "id": "P10",
       "title": "Versioning: SemVer from Conventional Commits, release workflow on main",
-      "status": "implemented"
+      "status": "verified"
     }
   ]
 }
