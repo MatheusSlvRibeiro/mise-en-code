@@ -1,0 +1,33 @@
+name: Release
+
+# A push to main is a promotion from preview. Compute the next version from the commit types
+# since the last tag, then create the tag and a GitHub Release with notes. See ADR 0009.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create the tag and the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="$(scripts/next-version.sh)"
+          if [ -z "$version" ]; then
+            echo "No releasable commit since the last tag."
+            exit 0
+          fi
+          scripts/release-notes.sh "$version" > "$RUNNER_TEMP/notes.md"
+          gh release create "v$version" --target "$GITHUB_SHA" --title "v$version" --notes-file "$RUNNER_TEMP/notes.md" --latest

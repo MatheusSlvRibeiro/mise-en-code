@@ -22,6 +22,7 @@ O foco é Django + DRF, React + Vite + TypeScript e fluxos de trabalho no GitHub
 skills/       um diretório plano por skill, cada um com um SKILL.md
 agents/       subagentes com modelo fixo e ferramentas mínimas
 hooks/        scripts shell para hooks do Claude Code
+scripts/      check.sh, as checagens de estrutura que o CI executa
 templates/    feature_list.json e progress.md para os seus projetos
 docs/decisions/   ADRs
 ```
@@ -34,7 +35,19 @@ cd mise-en-code
 ./install.sh
 ```
 
-O `install.sh` cria um symlink de cada skill em `~/.claude/skills/` e de cada agente em `~/.claude/agents/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+O `install.sh` é o único instalador. Ele confere as dependências (`git`, `gh`, `jq`) e se oferece para instalar o que faltar, oferece o [RTK](#opcional-rtk), liga as skills, os agentes e os hooks, e se oferece para registrar os hooks. Toda pergunta tem "não" como padrão, e sem terminal ele só cria os links. O `--yes` responde às perguntas, o `--dry-run` só lista o que faria, e o RTK exige `--with-rtk` ou um sim digitado.
+
+A etapa de ligação cria um symlink de cada skill em `~/.claude/skills/`, de cada agente em `~/.claude/agents/` e de cada hook em `~/.claude/hooks/`. Pode ser executado de novo sem problemas e nunca sobrescreve algo que não seja um link para este repositório.
+
+Os hooks só rodam depois de registrados. O `install.sh` se oferece para fazer isso: mostra a mudança no `~/.claude/settings.json`, faz backup do arquivo, adiciona os hooks `block-main-push` e `lint-on-edit` e não mexe nos seus outros hooks (o do RTK, por exemplo). Para fazer à mão, copie as entradas que quiser de [`settings.example.json`](settings.example.json). Reinicie o Claude Code depois.
+
+## Opcional: RTK
+
+O [RTK](https://github.com/rtk-ai/rtk) encurta a saída dos comandos antes de ela chegar ao modelo, o que economiza tokens. Nada aqui exige o RTK. Se você o usa, rode `rtk gain` para confirmar que é o pacote certo, e use `rtk proxy <comando>` quando precisar da saída exata, sem filtro. Veja o [ADR 0007](docs/decisions/0007-rtk-optional.md).
+
+## Versionamento
+
+As versões são tags do Git (`v0.1.0`), criadas quando a `preview` é promovida para a `main`. A próxima versão vem dos tipos de commit desde a última tag: `feat` gera uma versão minor, `fix` e `perf` geram um patch, e uma mudança que quebra compatibilidade (`feat!:` ou uma linha `BREAKING CHANGE:`) gera uma major. Enquanto a versão major é 0, uma quebra de compatibilidade aumenta a minor. As notas ficam nos [GitHub Releases](https://github.com/MatheusSlvRibeiro/mise-en-code/releases). Para fixar uma versão, rode `git checkout v0.1.0` na sua cópia instalada. Veja o [ADR 0009](docs/decisions/0009-versioning-with-tags.md).
 
 ## Status
 

@@ -5,8 +5,8 @@ description: Checks that a task is really finished before reporting it done. Use
 
 # Verify done
 
-1. Run the project's real checks: tests, linter, type-check, build. Use the commands the project defines.
-2. Read the output. A check passes only if you saw it pass.
+1. Run the project's real checks: tests, linter, type-check, build. Use the commands the project defines. The `test-runner` agent runs the tests and returns only the failures.
+2. Read the output. A check passes only if you saw it pass. If RTK is installed, the output of common commands is condensed; when you must parse or pipe the exact output, run the command as `rtk proxy <command>`.
 3. If the change affects a user-facing flow, start the app and test that flow in the browser.
 4. Confirm that every file or path the change refers to exists.
 5. Report the result as it is: failures with their output, and any check you could not run, with the reason.
