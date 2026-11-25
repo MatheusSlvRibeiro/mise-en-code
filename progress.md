@@ -9,10 +9,11 @@ Confirmed in a live setup (Claude Code 2.1.251):
 - `install.sh` linked the 11 skills and 3 agents, and registered `block-main-push` and `lint-on-edit` in `settings.json` next to the RTK hook.
 - Claude Code follows the symlinks: the skills and the `reviewer` and `test-runner` agents appear in a session.
 - `block-main-push` blocks in a real session: `git push origin main` in an empty repository with no remote was refused before Git ran.
+- The custom `Explore` replaces the built-in one: the agent list of a new session showed this repo's description with `Read, Grep, Glob`, and not the built-in entry. The model it runs on was not observed.
 
 ## Last session
 
-Checked the first real install, recorded that RTK's `git log` hides merge commits (ADR 0007), and updated this file.
+Confirmed from a new session's record that the custom `Explore` agent is the one loaded.
 
 ## Next step
 
@@ -20,7 +21,7 @@ Run the remaining live checks (see Open issues). Then pick one: P8 (lint-config 
 
 ## Open issues
 
-- Not verified: that the custom `Explore` replaces the built-in one. In a new session, ask for the description of the `Explore` agent; the custom one starts with "Read-only codebase search."
+- Asking Claude to describe an agent can be answered by reading the file on disk, which proves nothing about what is loaded. Check the session's agent list.
 - Not verified: that the `reviewer` frontmatter hook blocks a write command.
 - Not verified: `lint-on-edit` in a real project.
 - The `/agents` command no longer opens a list in Claude Code 2.1.251. To see the agents, ask Claude which subagents are available.
