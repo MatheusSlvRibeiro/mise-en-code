@@ -19,6 +19,8 @@ description: Defines how to branch, commit, and open pull requests in a GitHub f
 
 - Conventional Commits: `<type>(<optional scope>): <imperative subject>`. English, lowercase subject, no trailing period, first line at most 72 characters.
 - Types: the branch types plus `style` (formatting only) and `perf`.
+- The type sets the version, because releases are computed from it: `feat` is a minor release, `fix` and `perf` are a patch, and every other type releases nothing by itself. A change to a skill, agent, hook, script, or the installer changes how the harness behaves, so it is `feat` or `fix`, never `docs`. Use `docs` only for ADRs, READMEs, and progress notes.
+- A breaking change is `feat!:` (or any type with `!`), or a body line that starts with `BREAKING CHANGE:`. Renaming or removing a skill, agent, or hook, or changing what an installer or hook expects, is breaking.
 - One logical change per commit. Explain why in the body when the diff doesn't.
 - Never use `--no-verify` unless the user asks. If a hook fails, fix the cause.
 - Never `--amend` a pushed commit. Make a new one.

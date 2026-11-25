@@ -45,6 +45,10 @@ Os hooks só rodam depois de registrados. O `install.sh` se oferece para fazer i
 
 O [RTK](https://github.com/rtk-ai/rtk) encurta a saída dos comandos antes de ela chegar ao modelo, o que economiza tokens. Nada aqui exige o RTK. Se você o usa, rode `rtk gain` para confirmar que é o pacote certo, e use `rtk proxy <comando>` quando precisar da saída exata, sem filtro. Veja o [ADR 0007](docs/decisions/0007-rtk-optional.md).
 
+## Versionamento
+
+As versões são tags do Git (`v0.1.0`), criadas quando a `preview` é promovida para a `main`. A próxima versão vem dos tipos de commit desde a última tag: `feat` gera uma versão minor, `fix` e `perf` geram um patch, e uma mudança que quebra compatibilidade (`feat!:` ou uma linha `BREAKING CHANGE:`) gera uma major. Enquanto a versão major é 0, uma quebra de compatibilidade aumenta a minor. As notas ficam nos [GitHub Releases](https://github.com/MatheusSlvRibeiro/mise-en-code/releases). Para fixar uma versão, rode `git checkout v0.1.0` na sua cópia instalada. Veja o [ADR 0009](docs/decisions/0009-versioning-with-tags.md).
+
 ## Status
 
 O trabalho é acompanhado em [`feature_list.json`](feature_list.json) e [`progress.md`](progress.md). O status segue `pending` → `implemented` → `verified`, e só o mantenedor define `verified`.
