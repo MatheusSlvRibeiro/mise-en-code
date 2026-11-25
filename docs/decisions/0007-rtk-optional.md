@@ -10,6 +10,7 @@ RTK is a command-line proxy that shortens the output of common commands before i
 It also has costs that this harness ran into:
 
 - The output is condensed, not raw. A `grep -v` inside a pipeline that built a PR body returned RTK's summary instead of the filtered lines, and corrupted the body. `rtk proxy <command>` runs a command unfiltered.
+- It can hide data, not only shorten it. `git log` through RTK 0.41.0 left out the merge commit of the first promotion, so a branch that was up to date looked one commit behind. `rtk proxy git log` showed it.
 - The hook changes a command after Claude Code's automatic permission check. Twice the check refused to evaluate the rewritten call and asked for it to be sent again unchanged.
 - It is an external binary with its own license and installer. This repository is public, and its users may not have it.
 
